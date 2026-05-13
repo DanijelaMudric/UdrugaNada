@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Provjeri – Audio vodič</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+/* ── AUDIO PLAYER ── */
+.audio-hero {
+  background: linear-gradient(135deg, var(--pink) 0%, #a83060 100%);
+  border-radius: 24px;
+  padding: 36px 32px;
+  color: white;
+  max-width: 580px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.audio-hero::before {
+  content: '';
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  top: -80px;
+  right: -60px;
+}
+.audio-hero h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  margin-bottom: 8px;
+  position: relative;
+}
+.audio-hero p {
+  font-size: 14px;
+  opacity: 0.85;
+  line-height: 1.7;
+  margin-bottom: 28px;
+  max-width: 400px;
+  position: relative;
+}
+
+/* ── CUSTOM PLAYER ── */
+.player {
+  background: rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+  position: relative;
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.player-thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+}
+.player-title {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 3px;
+}
+.player-subtitle {
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+/* Progress bar */
+.progress-wrap {
+  margin-bottom: 14px;
+}
+.progress-bar {
+  height: 4px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 99px;
+  cursor: pointer;
+  position: relative;
+  margin-bottom: 6px;
+}
+.progress-fill {
+  height: 100%;
+  background: white;
+  border-radius: 99px;
+  width: 0%;
+  transition: width .1s linear;
+  position: relative;
+}
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+.progress-times {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.ctrl-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s;
+}
+.ctrl-btn:hover { background: rgba(255,255,255,0.28); }
+.ctrl-btn.play-btn {
+  width: 54px;
+  height: 54px;
+  font-size: 22px;
+  background: white;
+  color: var(--pink);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+}
+.ctrl-btn.play-btn:hover { background: #f9f9f9; }
+
+/* NATIVE AUDIO (hidden) */
+#audioEl { display: none; }
+
+/* ── INSTRUCTIONS FILE BOX ── */
+.file-instructions {
+  background: #fffbf0;
+  border: 2px dashed #f0c060;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 580px;
+  margin-bottom: 32px;
+}
+.file-instructions h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #7a5000;
+}
+.file-instructions p {
+  font-size: 14px;
+  color: #7a5000;
+  line-height: 1.75;
+  margin-bottom: 10px;
+}
+.file-instructions code {
+  background: #fef3cd;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: #7a5000;
+}
+
+/* ── STEPS LIST ── */
+.steps-section h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+.steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 580px;
+}
+.step-item {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: border-color .2s, box-shadow .2s;
+}
+.step-item.active-step {
+  border-color: var(--pink);
+  box-shadow: 0 4px 16px rgba(212,84,122,0.12);
+}
+.step-num {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--pinkLight);
+  color: var(--pink);
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid var(--border);
+}
+.step-item.active-step .step-num {
+  background: var(--pink);
+  color: white;
+  border-color: var(--pink);
+}
+.step-text h4 {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+.step-text p {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .audio-hero { padding: 24px 20px; }
+  .audio-hero h2 { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">♥</div>
+      <h2>Provjeri</h2>
+    </div>
+
+    <div class="card">
+      <h3>Audio vodič</h3>
+      <p style="font-size:14px; color:#555; line-height:1.7;">
+        Pusti snimku i slijedi usmene upute korak po korak bez gledanja u ekran.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Savjet</h3>
+      <p style="font-size:14px; color:#555; line-height:1.7;">
+        Pregled obavljaj u mirnoj prostoriji, u ležećem ili stoječem položaju.
+        Preporučuje se <strong>jednom mjesečno</strong>.
+      </p>
+    </div>
+
+    <a href="vodic.html" class="btn btn-outline">Vizualni vodič</a>
+  </aside>
+
+  <!-- ── CONTENT ── -->
+  <main class="content">
+    <div class="topbar">
+      <nav class="nav">
+        <a href="index.html">Početna</a>
+        <a href="vodic.html">Vodič pregleda</a>
+        <a href="audio.html" class="active">Audio vodič</a>
+        <a href="edukacija.html">Edukacija</a>
+      </nav>
+    </div>
+
+    <div class="main">
+      <div class="hero">
+        <h1>Audio <span>vodič</span></h1>
+        <p>Pusti audio i slijedi usmene upute dok obavljaš pregled.</p>
+      </div>
+
+      
+
+      <!-- ── AUDIO PLAYER ── -->
+      <audio id="audioEl" src="vodic-audio.mp3" preload="metadata"></audio>
+
+      <div class="audio-hero">
+        <h2>🎧 Vođeni samopregled</h2>
+        <p>Slijedi glasovne upute korak po korak. Možeš pauzirati u bilo kojem trenutku.</p>
+
+        <div class="player">
+          <div class="player-info">
+            <div class="player-thumb">♥</div>
+            <div>
+              <div class="player-title">Samopregled dojki – puni vodič</div>
+              <div class="player-subtitle">Vođeni audio &nbsp;·&nbsp; <span id="totalDuration">Učitavanje…</span></div>
+            </div>
+          </div>
+
+          <div class="progress-wrap">
+            <div class="progress-bar" id="progressBar" onclick="seekAudio(event)">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-times">
+              <span id="currentTime">0:00</span>
+              <span id="totalTime">0:00</span>
+            </div>
+          </div>
+
+          <div class="controls">
+            <button class="ctrl-btn" onclick="skipAudio(-10)" title="Natrag 10s">⏮ 10</button>
+            <button class="ctrl-btn play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+            <button class="ctrl-btn" onclick="skipAudio(10)" title="Naprijed 10s">10 ⏭</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP LIST ── -->
+      <div class="steps-section">
+        <h2>Koraci pregleda</h2>
+        <div class="steps-list" id="stepsList">
+
+          <div class="step-item" data-start="0">
+            <div class="step-num">1</div>
+            <div class="step-text">
+              <h4>Priprema i položaj</h4>
+              <p>Stani ispred zrcala s opuštenim rukama. Pogledaj oblik, veličinu i boju kože dojki.</p>
+            </div>
+          </div>
+
+          <div class="step-item" data-start="0">
+            <div class="step-num">2</div>
+            <div class="step-text">
+              <h4>Pregled s podignutim rukama</h4>
+              <p>Podigne ruke iznad glave i provjeri postoje li promjene u obliku ili na koži.</p>
+            </div>
+          </div>
+
+          <div class="step-item" data-start="0">
+            <div class="step-num">3</div>
+            <div class="step-text">
+              <h4>Palpacija lijeve dojke</h4>
+              <p>Kružnim pokretima vrhovima prstiju pregledaj cijelu lijevu dojku od pazuha prema sredini.</p>
+            </div>
+          </div>
+
+          <div class="step-item" data-start="0">
+            <div class="step-num">4</div>
+            <div class="step-text">
+              <h4>Palpacija desne dojke</h4>
+              <p>Isti postupak ponovi na desnoj dojki. Traži kvržice, zadebljanja ili bol.</p>
+            </div>
+          </div>
+
+          <div class="step-item" data-start="0">
+            <div class="step-num">5</div>
+            <div class="step-text">
+              <h4>Pregled bradavica</h4>
+              <p>Lagano pritisni bradavice i provjeri postoji li iscjedak. Provjeri položaj i boju.</p>
+            </div>
+          </div>
+
+          <div class="step-item" data-start="0">
+            <div class="step-num">6</div>
+            <div class="step-text">
+              <h4>Pregled pazušnih jama</h4>
+              <p>Pregledaj obje pazušne jame kružnim pokretima. Traži povećane limfne čvorove.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /main -->
+  </main>
+</div>
+
+<!-- ── MOBILE BOTTOM NAV ── -->
+<nav class="mobile-nav">
+  <a href="index.html"><span class="mn-icon">🏠</span>Početna</a>
+  <a href="vodic.html"><span class="mn-icon">🔍</span>Vodič</a>
+  <a href="audio.html" class="active"><span class="mn-icon">🎧</span>Audio</a>
+  <a href="edukacija.html"><span class="mn-icon">📚</span>Edukacija</a>
+</nav>
+
+<script>
+const audio = document.getElementById('audioEl');
+const playBtn = document.getElementById('playBtn');
+const progressFill = document.getElementById('progressFill');
+const currentTimeEl = document.getElementById('currentTime');
+const totalTimeEl = document.getElementById('totalTime');
+const totalDurationEl = document.getElementById('totalDuration');
+
+function fmtTime(s) {
+  if (isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${sec.toString().padStart(2,'0')}`;
+}
+
+audio.addEventListener('loadedmetadata', () => {
+  totalTimeEl.textContent = fmtTime(audio.duration);
+  totalDurationEl.textContent = fmtTime(audio.duration);
+});
+
+audio.addEventListener('timeupdate', () => {
+  const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+  progressFill.style.width = pct + '%';
+  currentTimeEl.textContent = fmtTime(audio.currentTime);
+});
+
+audio.addEventListener('ended', () => {
+  playBtn.textContent = '▶';
+});
+
+function togglePlay() {
+  if (audio.paused) {
+    audio.play();
+    playBtn.textContent = '⏸';
+  } else {
+    audio.pause();
+    playBtn.textContent = '▶';
+  }
+}
+
+function skipAudio(sec) {
+  audio.currentTime = Math.max(0, Math.min(audio.duration || 0, audio.currentTime + sec));
+}
+
+function seekAudio(e) {
+  const bar = document.getElementById('progressBar');
+  const rect = bar.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  audio.currentTime = pct * (audio.duration || 0);
+}
+
+// Note: step highlighting by timestamp requires knowing the audio timestamps.
+// Set data-start on each .step-item to the seconds where that step begins.
+// Example: data-start="0", data-start="45", data-start="90", etc.
+// Once you set the correct timestamps, this code will auto-highlight the active step.
+audio.addEventListener('timeupdate', () => {
+  const steps = document.querySelectorAll('.step-item');
+  const t = audio.currentTime;
+  let activeIdx = 0;
+  steps.forEach((s, i) => {
+    const start = parseFloat(s.dataset.start) || 0;
+    if (t >= start) activeIdx = i;
+  });
+  steps.forEach((s, i) => {
+    s.classList.toggle('active-step', i === activeIdx);
+  });
+});
+</script>
+</body>
+</html>

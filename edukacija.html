@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Provjeri – Edukacija</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.tab {
+  padding: 9px 18px;
+  border-radius: 99px;
+  border: 1.5px solid var(--border);
+  background: white;
+  color: var(--gray);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s;
+}
+.tab:hover { border-color: var(--pink); color: var(--pink); }
+.tab.active {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: white;
+}
+
+/* ── PANEL ── */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ── EDU CARDS ── */
+.edu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+.edu-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.edu-card .card-icon { font-size: 28px; }
+.edu-card h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px;
+}
+.edu-card p {
+  font-size: 14px;
+  color: var(--gray);
+  line-height: 1.7;
+}
+.edu-card.highlight {
+  background: var(--pinkLight);
+  border-color: var(--pinkMid);
+}
+
+/* ── ACCORDION ── */
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 640px;
+}
+.acc-item {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+}
+.acc-header {
+  padding: 16px 20px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--dark);
+  transition: background .15s;
+}
+.acc-header:hover { background: var(--pinkLight); }
+.acc-arrow { transition: transform .25s; font-size: 12px; color: var(--pink); }
+.acc-item.open .acc-arrow { transform: rotate(180deg); }
+.acc-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .3s ease;
+  font-size: 14px;
+  color: #444;
+  line-height: 1.75;
+}
+.acc-body-inner {
+  padding: 0 20px 18px;
+}
+.acc-item.open .acc-body { max-height: 400px; }
+
+/* ── RISK TABLE ── */
+.risk-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 580px;
+}
+.risk-item {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.risk-badge {
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.risk-badge.high   { background: #fde8ea; color: #7a1522; }
+.risk-badge.medium { background: #fff3cd; color: #7a5000; }
+.risk-badge.low    { background: #d4edda; color: #1a5c38; }
+.risk-text { font-size: 14px; color: #333; line-height: 1.6; }
+.risk-text strong { display: block; font-weight: 600; margin-bottom: 2px; }
+
+/* ── WHEN TO SEE DOCTOR ── */
+.warning-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+  max-width: 640px;
+}
+.warning-item {
+  background: #fde8ea;
+  border: 1px solid #f5b8c0;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.warning-item .w-icon { font-size: 26px; }
+.warning-item h4 { font-size: 14px; font-weight: 600; color: #7a1522; }
+.warning-item p { font-size: 13px; color: #7a1522; opacity: 0.8; line-height: 1.6; }
+
+.tip-box {
+  background: #eaf5f0;
+  border: 1px solid #a8d9c5;
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-top: 20px;
+  max-width: 580px;
+}
+.tip-box p {
+  font-size: 14px;
+  color: #1a5c38;
+  line-height: 1.75;
+}
+.tip-box strong { display: block; font-size: 15px; margin-bottom: 6px; }
+
+@media (max-width: 480px) {
+  .edu-grid { grid-template-columns: 1fr; }
+  .warning-list { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">♥</div>
+      <h2>Provjeri</h2>
+    </div>
+
+    <div class="card">
+      <h3>Edukacija</h3>
+      <p style="font-size:14px; color:#555; line-height:1.7;">
+        Uči o znakovima, rizičnim čimbenicima i kada potražiti liječničku pomoć.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Zapamti</h3>
+      <p style="font-size:14px; color:#555; line-height:1.7;">
+        Rano otkrivanje povećava šanse preživljavanja na <strong>gotovo 100%</strong> u ranom stadiju.
+      </p>
+    </div>
+
+    <a href="vodic.html" class="btn">Počni pregled</a>
+  </aside>
+
+  <!-- ── CONTENT ── -->
+  <main class="content">
+    <div class="topbar">
+      <nav class="nav">
+        <a href="index.html">Početna</a>
+        <a href="vodic.html">Vodič pregleda</a>
+        <a href="audio.html">Audio vodič</a>
+        <a href="edukacija.html" class="active">Edukacija</a>
+      </nav>
+    </div>
+
+    <div class="main">
+      <div class="hero">
+        <h1>Edukativni <span>sadržaj</span></h1>
+        <p>Sve što trebaš znati o samopregledu, znakovima upozorenja i prevenciji.</p>
+      </div>
+
+      <!-- ── TABS ── -->
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('osnove')">🔎 Osnove pregleda</button>
+        <button class="tab" onclick="showTab('znakovi')">⚠️ Znakovi upozorenja</button>
+        <button class="tab" onclick="showTab('rizici')">📊 Rizični čimbenici</button>
+        <button class="tab" onclick="showTab('lijecnik')">🏥 Kad posjetiti liječnika</button>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           PANEL 1 – Osnove pregleda
+      ══════════════════════════════════════ -->
+      <div class="panel active" id="panel-osnove">
+        <div class="edu-grid">
+          <div class="edu-card highlight">
+            <div class="card-icon">📅</div>
+            <h3>Kada obavljati pregled?</h3>
+            <p>Jednom <strong>mjesečno</strong>, uvijek u isto doba menstrualnog ciklusa — idealno 7 do 10 dana nakon početka menstruacije, kada je tkivo dojke najmekše.</p>
+          </div>
+          <div class="edu-card">
+            <div class="card-icon">🪞</div>
+            <h3>Vizualni pregled</h3>
+            <p>Stani ispred zrcala s opuštenim rukama, zatim s podignutim rukama. Traži promjene u obliku, veličini ili boji kože.</p>
+          </div>
+          <div class="edu-card">
+            <div class="card-icon">✋</div>
+            <h3>Opip dojke</h3>
+            <p>Vrhovima triju prstiju kružnim pokretima pregledaj cijelu dojku, od pazuha prema bradavici, uz različit pritisak (nježan, srednji, jak).</p>
+          </div>
+          <div class="edu-card">
+            <div class="card-icon">🛁</div>
+            <h3>Idealni uvjeti</h3>
+            <p>Pregled se najlakše obavlja pod tušem ili u ležećem položaju — mokra koža olakšava kliženje prstiju i opip tkiva.</p>
+          </div>
+        </div>
+
+        <div class="accordion">
+          <div class="acc-item">
+            <button class="acc-header" onclick="toggleAcc(this)">Kako pravilno koristiti prste? <span class="acc-arrow">▼</span></button>
+            <div class="acc-body"><div class="acc-body-inner">
+              Koristi vrhove kažiprsta, srednjeg i prstenjaka — ne cijele prste. Manji, kružni pokreti promjera oko 2 cm. Pokrij cijelu površinu dojke uključujući područje do pazuha. Koristi tri razine pritiska: nježni (koža), srednji (tkivo), jači (do rebara).
+            </div></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-header" onclick="toggleAcc(this)">Je li bol normalna? <span class="acc-arrow">▼</span></button>
+            <div class="acc-body"><div class="acc-body-inner">
+              Blaga osjetljivost, osobito pred menstruaciju, je normalna. Trajna ili pojačana bol, osobito lokalizirana, razlog je za posjet liječniku. Bol sama po sebi rijetko je znak raka, no ne treba je ignorirati.
+            </div></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-header" onclick="toggleAcc(this)">Što je normalno tkivo dojke? <span class="acc-arrow">▼</span></button>
+            <div class="acc-body"><div class="acc-body-inner">
+              Dojke su prirodno grudaste — osobito kod mlađih žena. Cilj nije pronaći "savršeno glatko" tkivo, već uočiti promjenu u odnosu na prošli pregled. Redovitošću ćeš naučiti kako tvoje dojke prirodno izgledaju i osjećaju se.
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           PANEL 2 – Znakovi upozorenja
+      ══════════════════════════════════════ -->
+      <div class="panel" id="panel-znakovi">
+        <p style="font-size:15px; color:var(--gray); max-width:580px; line-height:1.7; margin-bottom:24px;">
+          Sljedeće promjene ne znače nužno dijagnozu — no svaka od njih je razlog za konzultaciju s liječnikom.
+        </p>
+
+        <div class="warning-list">
+          <div class="warning-item">
+            <div class="w-icon">🔴</div>
+            <h4>Kvržica ili zadebljanje</h4>
+            <p>Nova kvržica u dojci ili pazuhu, posebno tvrda i nepomična.</p>
+          </div>
+          <div class="warning-item">
+            <div class="w-icon">🔴</div>
+            <h4>Promjena oblika</h4>
+            <p>Neočekivano povećanje, smanjenje ili asimetrija jedne dojke.</p>
+          </div>
+          <div class="warning-item">
+            <div class="w-icon">🔴</div>
+            <h4>Uvučena bradavica</h4>
+            <p>Bradavica koja se uvlači prema unutra, a ranije nije bila takva.</p>
+          </div>
+          <div class="warning-item">
+            <div class="w-icon">🔴</div>
+            <h4>Iscjedak iz bradavice</h4>
+            <p>Iscjedak koji nije majčino mlijeko, osobito krvav ili žućkast.</p>
+          </div>
+          <div class="warning-item">
+            <div class="w-icon">🔴</div>
+            <h4>Promjene na koži</h4>
+            <p>Crvenilo, nabiranje, ljuskanje ili kožica poput narančine kore.</p>
+          </div>
+          <div class="warning-item">
+            <div class="w-icon">🔴</div>
+            <h4>Oteklina pazuha</h4>
+            <p>Povećani limfni čvorovi u pazušnoj jami koji ne nestaju.</p>
+          </div>
+        </div>
+
+        <div class="tip-box" style="margin-top:24px;">
+          <p><strong>✅ Što napraviti ako primijetiš neki od ovih znakova?</strong>
+          Ne čekaj — zakaži pregled kod svog obiteljskog liječnika ili ginekologa. Većina promjena nije maligna, ali jedino liječnik može to sa sigurnošću utvrditi.</p>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           PANEL 3 – Rizični čimbenici
+      ══════════════════════════════════════ -->
+      <div class="panel" id="panel-rizici">
+        <p style="font-size:15px; color:var(--gray); max-width:580px; line-height:1.7; margin-bottom:24px;">
+          Prisutnost rizičnih čimbenika ne znači da ćeš oboljeti — ali znači da je redoviti nadzor važniji.
+        </p>
+
+        <div class="risk-list">
+          <div class="risk-item">
+            <span class="risk-badge high">Visoki rizik</span>
+            <div class="risk-text"><strong>Obiteljska povijest raka dojke</strong>Majka, sestra ili kći s dijagnozom, osobito u mlađoj dobi — povećava rizik 2–3 puta.</div>
+          </div>
+          <div class="risk-item">
+            <span class="risk-badge high">Visoki rizik</span>
+            <div class="risk-text"><strong>Mutacije BRCA1 / BRCA2 gena</strong>Genetske mutacije koje značajno povećavaju doživotni rizik. Genetičko testiranje je opcija.</div>
+          </div>
+          <div class="risk-item">
+            <span class="risk-badge medium">Umjereni rizik</span>
+            <div class="risk-text"><strong>Dob iznad 50 godina</strong>Rizik raste s godinama — oko 80% slučajeva dijagnosticira se kod žena starijih od 50 godina.</div>
+          </div>
+          <div class="risk-item">
+            <span class="risk-badge medium">Umjereni rizik</span>
+            <div class="risk-text"><strong>Hormonska terapija</strong>Dugotrajna kombinirana hormonska nadomjesna terapija u menopauzi blago povećava rizik.</div>
+          </div>
+          <div class="risk-item">
+            <span class="risk-badge medium">Umjereni rizik</span>
+            <div class="risk-text"><strong>Prekomjerna težina / debljina</strong>Osobito u postmenopauzi — masno tkivo proizvodi estrogen koji može poticati rast stanica.</div>
+          </div>
+          <div class="risk-item">
+            <span class="risk-badge low">Niži rizik</span>
+            <div class="risk-text"><strong>Konzumacija alkohola</strong>Svaki svakodnevni piće alkohola povećava rizik za oko 7–10%.</div>
+          </div>
+          <div class="risk-item">
+            <span class="risk-badge low">Niži rizik</span>
+            <div class="risk-text"><strong>Nedostatak fizičke aktivnosti</strong>Redovita tjelesna aktivnost smanjuje rizik za 10–20%.</div>
+          </div>
+        </div>
+
+        <div class="tip-box">
+          <p><strong>💡 Što možeš kontrolirati?</strong>
+          Redovita tjelovježba, zdravija prehrana, ograničavanje alkohola i redoviti pregledi — sve su to dokazano korisni koraci neovisno o genetskom riziku.</p>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           PANEL 4 – Kad posjetiti liječnika
+      ══════════════════════════════════════ -->
+      <div class="panel" id="panel-lijecnik">
+        <div class="edu-grid">
+          <div class="edu-card">
+            <div class="card-icon">🩺</div>
+            <h3>Obiteljski liječnik</h3>
+            <p>Prva točka kontakta za svaku sumnju. Može pregledati, uputiti na ultrazvuk ili mamografiju i poslati na specijalista.</p>
+          </div>
+          <div class="edu-card">
+            <div class="card-icon">👩‍⚕️</div>
+            <h3>Ginekolog</h3>
+            <p>Redoviti godišnji pregled trebao bi uključivati i pregled dojki, osobito za žene iznad 40 godina.</p>
+          </div>
+          <div class="edu-card highlight">
+            <div class="card-icon">📷</div>
+            <h3>Mamografija</h3>
+            <p>Preporučuje se svake 1–2 godine za žene između 50 i 69 godina, ili ranije uz povišeni rizik. U Hrvatskoj je dostupna besplatno u okviru programa ranog otkrivanja.</p>
+          </div>
+          <div class="edu-card">
+            <div class="card-icon">🔬</div>
+            <h3>Ultrazvuk dojki</h3>
+            <p>Koristan kod mlađih žena s gušćim tkivom dojki. Često se koristi kao dopuna mamografiji.</p>
+          </div>
+        </div>
+
+        <h3 style="font-family:'DM Serif Display',serif; font-size:20px; margin:24px 0 14px;">Česta pitanja</h3>
+        <div class="accordion">
+          <div class="acc-item">
+            <button class="acc-header" onclick="toggleAcc(this)">Koliko često trebam ići na mamografiju? <span class="acc-arrow">▼</span></button>
+            <div class="acc-body"><div class="acc-body-inner">
+              Za žene bez posebnih rizičnih čimbenika: svake 2 godine između 50. i 69. godine. Za žene s povećanim rizikom (obiteljska povijest, BRCA mutacije) liječnik može preporučiti i češće preglede, počevši i od 40. godine.
+            </div></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-header" onclick="toggleAcc(this)">Zamjenjuje li samopregled odlazak liječniku? <span class="acc-arrow">▼</span></button>
+            <div class="acc-body"><div class="acc-body-inner">
+              Ne — samopregled je korisna navika koja pomaže u uočavanju promjena, no ne zamjenjuje klinički pregled i mamografiju. Preporučuje se redovito kombinirati sve tri metode.
+            </div></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-header" onclick="toggleAcc(this)">Trebam li se bojati ako nađem kvržicu? <span class="acc-arrow">▼</span></button>
+            <div class="acc-body"><div class="acc-body-inner">
+              Većina kvržica u dojci su benigne — ciste, fibroadenomi ili normalne promjene tkiva. Ipak, svaku novu promjenu treba pokazati liječniku što prije. Rano otkrivanje malignih promjena dramatično poboljšava ishod liječenja.
+            </div></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-header" onclick="toggleAcc(this)">Je li rak dojke nasljedan? <span class="acc-arrow">▼</span></button>
+            <div class="acc-body"><div class="acc-body-inner">
+              Oko 5–10% slučajeva raka dojke vezano je uz nasljedne mutacije (BRCA1, BRCA2). Ostatak su sporadični slučajevi. Ako u obitelji imaš više slučajeva raka dojke, razgovaraj s liječnikom o genetičkom savjetovanju.
+            </div></div>
+          </div>
+        </div>
+
+        <div class="tip-box">
+          <p><strong>📞 Hrvatska linija za rak: 0800 444 000</strong><br>
+          Besplatna linija za savjete, informacije i psihološku podršku. Dostupna radnim danima.</p>
+        </div>
+      </div>
+
+    </div><!-- /main -->
+  </main>
+</div>
+
+<!-- ── MOBILE BOTTOM NAV ── -->
+<nav class="mobile-nav">
+  <a href="index.html"><span class="mn-icon">🏠</span>Početna</a>
+  <a href="vodic.html"><span class="mn-icon">🔍</span>Vodič</a>
+  <a href="audio.html"><span class="mn-icon">🎧</span>Audio</a>
+  <a href="edukacija.html" class="active"><span class="mn-icon">📚</span>Edukacija</a>
+</nav>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('panel-' + id).classList.add('active');
+}
+
+function toggleAcc(btn) {
+  const item = btn.closest('.acc-item');
+  item.classList.toggle('open');
+}
+</script>
+</body>
+</html>

@@ -265,7 +265,6 @@
 
 <div class="app">
 
-  <!-- ── SIDEBAR ── -->
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-icon">♥</div>
@@ -274,8 +273,8 @@
 
     <div class="card">
       <h3>Zadnji samopregled</h3>
-      <div id="savedDate">Nije spremljeno</div>
-      <div id="statusBox" class="status-box"></div>
+      <div id="savedDate">20. 05. 2026.</div>
+      <div id="statusBox" class="status-box normal">Uredu</div>
       <button class="btn" onclick="openModal()">Označi kao obavljeno</button>
     </div>
 
@@ -294,7 +293,6 @@
     </div>
   </aside>
 
-  <!-- ── CONTENT ── -->
   <main class="content">
     <div class="topbar">
       <nav class="nav">
@@ -311,33 +309,41 @@
         <p>Dodirni točke na slici ili gumbe ispod za detaljne upute pregleda.</p>
       </div>
 
-      <!-- ── TWO COLUMNS ── -->
       <div class="guide-columns">
 
-        <!-- LEFT: slika -->
-        <div>
+        <div style="display: flex; flex-direction: column; gap: 18px;">
           <div class="image-area">
             <img src="woman.png" alt="Slika dojki" style="width:100%; max-width:600px; display:block; border-radius:18px;" />
 
-            <div class="point" id="pt1" style="top:59%; left:38%;" onclick="showInfo(1)" title="Desna dojka">1</div>
-            <div class="point" id="pt2" style="top:59%; right:30%;" onclick="showInfo(2)" title="Lijeva dojka">2</div>
-            <div class="point" id="pt3" style="top:48%; left:51%;" onclick="showInfo(3)" title="Središnji dio">3</div>
-            <div class="point" id="pt4" style="top:63%; left:51%;" onclick="showInfo(4)" title="Donji dio dojki">4</div>
-            <div class="point" id="pt5" style="top:43%; left:35%;" onclick="showInfo(5)" title="Desni pazuh">5</div>
-            <div class="point" id="pt6" style="top:43%; right:27%;" onclick="showInfo(6)" title="Lijevi pazuh">6</div>
+            <div class="point" id="pt1" style="top:59%; left:38%;" onclick="showInfo(1)">1</div>
+            <div class="point" id="pt2" style="top:59%; right:30%;" onclick="showInfo(2)">2</div>
+            <div class="point" id="pt3" style="top:48%; left:51%;" onclick="showInfo(3)">3</div>
+            <div class="point" id="pt4" style="top:63%; left:51%;" onclick="showInfo(4)">4</div>
+            <div class="point" id="pt5" style="top:43%; left:35%;" onclick="showInfo(5)">5</div>
+            <div class="point" id="pt6" style="top:43%; right:27%;" onclick="showInfo(6)">6</div>
+            <div class="point" id="pt7" style="top:28%; right:30%;" onclick="showInfo(7)">7</div>
+            <div class="point" id="pt8" style="top:28%; left:38%;" onclick="showInfo(8)">8</div>
+            <div class="point" id="pt9" style="top:18%; left:51%;" onclick="showInfo(9)">9</div>
+          </div>
+
+          <div style="width: 100%; display: flex; flex-direction: column; gap: 14px;">
+            <div class="tip-card">
+              <h4>Savjet</h4>
+              <p id="tipText">Pregled u ležećem položaju uz ruku ispod glave daje ravnomjeran pritisak tkiva.</p>
+            </div>
+            <div>
+              <button class="btn" onclick="openModal()">✓ Označi pregled kao obavljen</button>
+            </div>
           </div>
         </div>
 
-        <!-- RIGHT: info, gumbi, napredak, savjet -->
         <div class="guide-right">
 
-          <!-- INFO BOX -->
           <div class="info" id="infoBox">
             <h3>Kako napraviti pregled?</h3>
             <p>Samopregled obavljaj jednom mjesečno. Dodirni točke na slici ili gumbe ispod za upute svakog koraka.</p>
           </div>
 
-          <!-- GUMBI BROJ -->
           <div class="bottom-points" id="bottomPoints">
             <button id="bb1" onclick="showInfo(1)">1</button>
             <button id="bb2" onclick="showInfo(2)">2</button>
@@ -345,13 +351,16 @@
             <button id="bb4" onclick="showInfo(4)">4</button>
             <button id="bb5" onclick="showInfo(5)">5</button>
             <button id="bb6" onclick="showInfo(6)">6</button>
+            <button id="bb7" onclick="showInfo(7)">7</button>
+            <button id="bb8" onclick="showInfo(8)">8</button>
+            <button id="bb9" onclick="showInfo(9)">9</button>
           </div>
 
-          <!-- NAPREDAK -->
           <div class="progress-card">
             <h4>Napredak pregleda</h4>
-            <div class="prog-bar-wrap"><div class="prog-bar-fill" id="progBar"></div></div>
-            <div class="prog-count"><span id="progCount">0</span> od 6 koraka pregledano</div>
+            <div class="prog-bar-wrap"><div class="prog-bar-fill" id="progBar" style="width: 0%;"></div></div>
+            <div class="prog-count"><span id="progCount">0</span> od 9 koraka pregledano</div>
+            
             <div class="prog-grid">
               <div class="prog-item" id="pg1"><div class="prog-num">1</div>Desna dojka</div>
               <div class="prog-item" id="pg2"><div class="prog-num">2</div>Lijeva dojka</div>
@@ -359,29 +368,17 @@
               <div class="prog-item" id="pg4"><div class="prog-num">4</div>Donji dio</div>
               <div class="prog-item" id="pg5"><div class="prog-num">5</div>Desni pazuh</div>
               <div class="prog-item" id="pg6"><div class="prog-num">6</div>Lijevi pazuh</div>
+              <div class="prog-item" id="pg7"><div class="prog-num">7</div>Lijeva prsa</div>
+              <div class="prog-item" id="pg8"><div class="prog-num">8</div>Desna prsa</div>
+              <div class="prog-item" id="pg9"><div class="prog-num">9</div>Vrat</div>
             </div>
-            <div class="prog-done-msg" id="progDoneMsg">♥ Odlično! Sve točke su pregledane.</div>
+            <div class="prog-done-msg" id="progDoneMsg" style="display: none;">♥ Odlično! Sve točke su pregledane.</div>
           </div>
 
-        </div><!-- /guide-right -->
-      </div><!-- /guide-columns -->
-
-      <!-- SAVJET + GUMB ispod slike -->
-      <div style="max-width: 50%; margin-top: 18px; display: flex; flex-direction: column; gap: 14px;">
-        <div class="tip-card">
-          <h4>Savjet</h4>
-          <p id="tipText"></p>
-        </div>
-        <div>
-          <button class="btn" onclick="openModal()">✓ Označi pregled kao obavljen</button>
-        </div>
-      </div>
-
-    </div>
+        </div></div></div>
   </main>
 </div>
 
-<!-- ── MOBILE BOTTOM NAV ── -->
 <nav class="mobile-nav">
   <a href="index.html"><span class="mn-icon">🏠</span>Početna</a>
   <a href="vodic.html" class="active"><span class="mn-icon">🔍</span>Vodič</a>
@@ -389,7 +386,6 @@
   <a href="edukacija.html"><span class="mn-icon">📚</span>Edukacija</a>
 </nav>
 
-<!-- ── MODAL: Rezultat pregleda ── -->
 <div class="modal" id="modal">
   <div class="modal-box">
     <h2>Rezultat pregleda</h2>
@@ -399,29 +395,31 @@
       <option value="Vrlo sumnjivo">Vrlo sumnjivo</option>
     </select>
 
-    <h4 id="pointTitle" style="color:var(--pink); min-height:20px;"></h4>
+    <h4 id="pointTitle" style="color:var(--pink); min-height:20px; margin: 10px 0 5px 0;"></h4>
 
     <div id="suspiciousArea" style="display:none;">
       <p style="font-weight:600; color:#444; margin-bottom:12px;">Označi sumnjivu točku:</p>
       <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
-        <button type="button" class="sus-btn" onclick="selectPoint(1)">1</button>
-        <button type="button" class="sus-btn" onclick="selectPoint(2)">2</button>
-        <button type="button" class="sus-btn" onclick="selectPoint(3)">3</button>
-        <button type="button" class="sus-btn" onclick="selectPoint(4)">4</button>
-        <button type="button" class="sus-btn" onclick="selectPoint(5)">5</button>
-        <button type="button" class="sus-btn" onclick="selectPoint(6)">6</button>
+        <button class="sus-btn" onclick="selectPoint(1)">1</button>
+        <button class="sus-btn" onclick="selectPoint(2)">2</button>
+        <button class="sus-btn" onclick="selectPoint(3)">3</button>
+        <button class="sus-btn" onclick="selectPoint(4)">4</button>
+        <button class="sus-btn" onclick="selectPoint(5)">5</button>
+        <button class="sus-btn" onclick="selectPoint(6)">6</button>
+        <button class="sus-btn" onclick="selectPoint(7)">7</button>
+        <button class="sus-btn" onclick="selectPoint(8)">8</button>
+        <button class="sus-btn" onclick="selectPoint(9)">9</button>
       </div>
-      <div id="selectedPointText" style="color:var(--pink); font-weight:600;"></div>
+      <div id="selectedPointText" style="color:var(--pink); font-weight:600; margin-bottom: 10px;"></div>
     </div>
 
-    <div style="display:flex; flex-direction:column; gap:0; margin-top:10px;">
+    <div style="display:flex; flex-direction:column; gap:8px; margin-top:15px;">
       <button class="btn" onclick="saveExam()">Spremi pregled</button>
-      <button class="btn close-btn" onclick="closeModal()">Zatvori</button>
+      <button class="btn close-btn" style="background:#eee; color:#555;" onclick="closeModal()">Zatvori</button>
     </div>
   </div>
 </div>
 
-<!-- ── POPUP: Opis točke ── -->
 <div id="pointInfoModal">
   <div class="modal-box">
     <h3 id="pointModalTitle"></h3>
@@ -432,30 +430,15 @@
 
 <script>
 const infoData = {
-  1: {
-    title: "Desna dojka",
-    text: "Vrhovima triju prstiju lijeve ruke kružnim pokretima pregledaj cijelu desnu dojku. Počni od vanjskog dijela i postupno se pomiči prema bradavici. Obrati pažnju na kvržice, zadebljanja ili tvrda područja koja prije nisi primijetila."
-  },
-  2: {
-    title: "Lijeva dojka",
-    text: "Vrhovima prstiju desne ruke pregledaj lijevu dojku istim kružnim pokretima. Pokrij cijelu površinu dojke, uključujući gornji i bočni dio prema pazuhu. Provjeri postoje li promjene u veličini, obliku ili osjetljivosti."
-  },
-  3: {
-    title: "Središnji dio",
-    text: "Pregledaj područje između dojki i prsnu kost. Obrati pažnju na kožu bradavica, njezinu boju i teksturu. Lagano pritisni područje oko bradavica kako bi provjerila postoji li neobičan iscjedak ili uvlačenje kože."
-  },
-  4: {
-    title: "Donji dio dojki",
-    text: "Pregledaj područje ispod dojki i središnji dio prsnog koša. Potraži promjene na koži poput nabiranja (izgled narančine kore), oteklina ili neobičnog osjećaja zatezanja."
-  },
-  5: {
-    title: "Desni pazuh",
-    text: "Podigni lijevu ruku, a desnom rukom laganim kružnim pokretima pregledaj lijevi pazuh. Provjeri postoje li povećani limfni čvorovi, neobična osjetljivost, oteklina ili tvrde promjene ispod kože."
-  },
-  6: {
-    title: "Lijevi pazuh",
-    text: "Podigni desnu ruku, a lijevom rukom vrhovima prstiju pregledaj desni pazuh. Obrati pažnju na bilo kakve nepravilnosti, čvoriće ili otekline koji prije nisu bili prisutni."
-  }
+  1: { title: "Desna dojka", text: "Vrhovima triju prstiju lijeve ruke kružnim pokretima pregledaj cijelu desnu dojku." },
+  2: { title: "Lijeva dojka", text: "Vrhovima prstiju desne ruke pregledaj lijevu dojku kružnim pokretima." },
+  3: { title: "Središnji dio", text: "Pregledaj područje između dojki i prsnu kost." },
+  4: { title: "Donji dio dojki", text: "Pregledaj područje ispod dojki i donji dio prsnog koša." },
+  5: { title: "Desni pazuh", text: "Pregledaj desni pazuh i provjeri postoje li povećani limfni čvorovi." },
+  6: { title: "Lijevi pazuh", text: "Pregledaj lijevi pazuh i provjeri postoje li nepravilnosti." },
+  7: { title: "Lijeva strana prsa", text: "Pregledaj lijevu stranu prsnog koša iznad dojke. Obrati pažnju na osjetljivost, zadebljanja ili promjene kože." },
+  8: { title: "Desna strana prsa", text: "Pregledaj desnu stranu prsnog koša iznad dojke. Laganim kružnim pokretima provjeri postoje li nepravilnosti." },
+  9: { title: "Vrat", text: "Pregledaj područje vrata i ispod ključne kosti. Obrati pažnju na povećane limfne čvorove, otekline ili bolna područja." }
 };
 
 const tips = [
@@ -465,32 +448,20 @@ const tips = [
   "Vizualni pregled pred ogledalom pomaže u otkrivanju promjena oblika ili kože.",
   "Ako primijetiš razliku, svakako posjeti liječnika — bolje jednom više."
 ];
-document.getElementById("tipText").textContent = tips[Math.floor(Math.random() * tips.length)];
 
+// POPRAVLJENO: Početno stanje je sada prazan Set (0/9 koraka završenih)
 const visitedPoints = new Set();
 let selectedSuspiciousPoint = null;
 
-// Load saved data
-const saved = sessionStorage.getItem('examData');
-if (saved) {
-  const data = JSON.parse(saved);
-  document.getElementById('savedDate').textContent = data.date;
-  const box = document.getElementById('statusBox');
-  box.innerHTML = data.status + (data.point ? `<br>Sumnjiva točka: ${data.point}` : '');
-  box.className = 'status-box';
-  if (data.status === 'Uredu') box.classList.add('normal');
-  else if (data.status === 'Sumnjivo') box.classList.add('warning');
-  else box.classList.add('danger');
-}
-
 function updateProgress() {
   const n = visitedPoints.size;
-  document.getElementById("progBar").style.width = (n / 6 * 100) + "%";
+  document.getElementById("progBar").style.width = (n / 9 * 100) + "%";
   document.getElementById("progCount").textContent = n;
-  for (let i = 1; i <= 6; i++) {
+
+  for (let i = 1; i <= 9; i++) {
     document.getElementById("pg" + i).classList.toggle("done", visitedPoints.has(i));
   }
-  document.getElementById("progDoneMsg").style.display = n === 6 ? "block" : "none";
+  document.getElementById("progDoneMsg").style.display = n === 9 ? "block" : "none";
 }
 
 function showInfo(id) {
@@ -550,16 +521,9 @@ function saveExam() {
   const now = new Date();
   const date = now.toLocaleDateString("hr-HR", { day: "2-digit", month: "2-digit", year: "numeric" });
 
-  const data = {
-    date,
-    status,
-    point: (status !== "Uredu" && selectedSuspiciousPoint) ? selectedSuspiciousPoint : null
-  };
-  sessionStorage.setItem('examData', JSON.stringify(data));
-
   document.getElementById("savedDate").textContent = date;
   const box = document.getElementById("statusBox");
-  box.innerHTML = status + (data.point ? `<br>Sumnjiva točka: ${data.point} – ${infoData[data.point].title}` : '');
+  box.innerHTML = status + (selectedSuspiciousPoint ? `<br>Sumnjiva točka: ${selectedSuspiciousPoint} – ${infoData[selectedSuspiciousPoint].title}` : '');
   box.className = "status-box";
   if (status === "Uredu") box.classList.add("normal");
   else if (status === "Sumnjivo") box.classList.add("warning");
@@ -572,9 +536,6 @@ function closePointInfo() { document.getElementById("pointInfoModal").classList.
 
 document.getElementById("modal").addEventListener("click", function(e) {
   if (e.target === this) closeModal();
-});
-document.getElementById("pointInfoModal").addEventListener("click", function(e) {
-  if (e.target === this) closePointInfo();
 });
 </script>
 </body>
